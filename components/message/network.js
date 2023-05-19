@@ -1,12 +1,16 @@
 const express = require("express");
+const multer = require("multer");
 
 const response = require("../../network/response");
 const controller = require("./controller");
 
 const router = express.Router();
+const upload = multer({
+  dest: "uploads/",
+});
 
 router.get("/", function (req, res) {
-  const filterMessages = req.query.user || null;
+  const filterMessages = req.query.chat || null;
 
   controller
     .getMessages(filterMessages)
@@ -18,11 +22,11 @@ router.get("/", function (req, res) {
     });
 });
 
-router.post("/", function (req, res) {
-  const { body } = req;
+router.post("/", upload.single("file"), function (req, res) {
+  const { chat, user, message } = req.body;
 
   controller
-    .addMessage(body.user, body.message)
+    .addMessage(chat, user, message)
     .then((fullMessage) => {
       response.success(req, res, fullMessage, 201);
     })
