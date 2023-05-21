@@ -1,7 +1,6 @@
 const express = require("express");
 const app = express();
 const server = require("http").Server(app);
-
 const config = require("./config");
 
 const cors = require("cors");
@@ -10,7 +9,9 @@ const socket = require("./socket");
 const db = require("./db");
 const router = require("./network/routes");
 
-db(config.mongodbUrl);
+const url = `mongodb+srv://${config.mongodbUser}:${config.mongodbPass}@${config.mongodbCluster}/${config.mongodbCollection}?retryWrites=true&w=majority`;
+
+db(url);
 
 app.use(cors());
 
